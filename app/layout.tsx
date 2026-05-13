@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   verification: {
-    google: "GLmx-NsD96NjeRKKf_hy4ofdlyVzHgqWfUZeyWjqYYY", 
+    google: "googled22169675e6a0a2e", 
     yandex: "yandex",
     yahoo: "yahoo",
     other: {
