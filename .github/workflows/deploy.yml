@@ -1,0 +1,38 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            # Navigate to the domain folder (usually domains/surviveuni.online/public_html)
+            # Adjust path if your Hostinger setup is different
+            cd domains/surviveuni.online/public_html || cd public_html
+            
+            # Pull latest changes
+            git pull origin master
+            
+            # Install dependencies
+            npm install
+            
+            # Build the project
+            npm run build
+            
+            # Restart the app
+            # If you use PM2:
+            pm2 restart survive-uni || pm2 start npm --name "survive-uni" -- start || echo "PM2 not found, please restart manually in Hostinger hPanel"

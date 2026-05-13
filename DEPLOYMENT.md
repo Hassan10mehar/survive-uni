@@ -28,34 +28,24 @@ git push -u origin master
 
 ---
 
-## 2. Deploying on Hostinger (VPS)
-If you have a **VPS plan** (recommended for Next.js), follow these steps:
+## 2. Automated Deployment (GitHub Actions)
+We have set up an automated pipeline. Every time you push to GitHub, the site updates on Hostinger.
 
-1.  **Login via SSH**: Use PuTTY or Terminal to connect to your VPS.
-2.  **Install Node.js**:
-    ```bash
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-    ```
-3.  **Clone the Repo**:
-    ```bash
-    git clone https://github.com/yourusername/survive-uni.git
-    cd survive-uni
-    ```
-4.  **Install Dependencies & Build**:
-    ```bash
-    npm install
-    npm run build
-    ```
-5.  **Setup PM2 (Process Manager)**:
-    ```bash
-    sudo npm install -g pm2
-    pm2 start npm --name "survive-uni" -- start
-    pm2 save
-    pm2 startup
-    ```
+### Setting up GitHub Secrets
+Go to your GitHub Repo → **Settings > Secrets and variables > Actions** and add:
+- `SSH_HOST`: `82.29.87.65`
+- `SSH_PORT`: `65002`
+- `SSH_USER`: `u961276882`
+- `SSH_PASSWORD`: (Your SSH Password)
 
----
+### How to Deploy
+Just push your code:
+```powershell
+git add .
+git commit -m "Deploying to production"
+git push origin master
+```
+The GitHub Action will handle the rest!
 
 ## 3. Google Search Console & AdSense
 Before you start ranking, you must verify your site ownership.
