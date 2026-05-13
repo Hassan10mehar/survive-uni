@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-base: #F4F4F0;
+  --color-brutal-pink: #FF90E8;
+  --color-brutal-yellow: #FFDF00;
+  --color-brutal-blue: #4A90E2;
+  --color-brutal-red: #FF4911;
+  --color-brutal-green: #00FFC2;
+  --shadow-brutal: 8px 8px 0px 0px rgba(0,0,0,1);
+  --shadow-brutal-sm: 4px 4px 0px 0px rgba(0,0,0,1);
+  --font-sans: var(--font-space-grotesk);
+}
+
+:root {
+  --background: #F4F4F0;
+  --foreground: #000000;
+}
+
+.dark {
+  --background: #09090b; /* zinc-950 */
+  --foreground: #ffffff;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── NEUBRUTALISM UTILITIES ─── */
+
+.shadow-brutal {
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.shadow-brutal-sm {
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
+
+/* Responsive shadows — smaller on mobile */
+@media (max-width: 640px) {
+  .shadow-brutal {
+    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
+  }
+  .shadow-brutal-sm {
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+  }
+}
+
+.brutal-card {
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.brutal-btn {
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.brutal-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+/* ─── INPUTS ─── */
+.brutal-input {
+  border: 4px solid #000;
+  background: #fff;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+  min-height: 52px;   /* mobile tap target */
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background 0.1s;
+}
+
+.brutal-input:focus {
+  outline: none;
+  background: #FFDF00;
+}
+
+.brutal-input::placeholder {
+  color: #aaa;
+  font-weight: 400;
+}
+
+/* ─── LABELS ─── */
+.brutal-label {
+  font-weight: 800;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+/* ─── MARQUEE STRIP ─── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── RESULT NUMBER ─── */
+.result-display {
+  font-size: clamp(3.5rem, 15vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F4F4F0; }
+::-webkit-scrollbar-thumb { background: #000; }
+
+/* ─── MOBILE HORIZONTAL SCROLL ─── */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
