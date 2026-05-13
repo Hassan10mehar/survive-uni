@@ -59,7 +59,7 @@ export default function AggregateIndexPage() {
         <Breadcrumbs items={[{ label: "Tools", href: "/" }, { label: "Merit Calculator" }]} />
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-12">
             <BrutalCard variant="black" className="h-full flex items-center p-8 lg:p-12">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="bg-[#4A90E2] p-4 border-4 border-white shrink-0 rotate-3">
@@ -68,26 +68,14 @@ export default function AggregateIndexPage() {
                 <div>
                   <h2 className="font-black text-2xl uppercase text-[#4A90E2] mb-2 tracking-tighter">Official Criteria 2026</h2>
                   <p className="text-lg text-white/90 font-bold leading-relaxed">
-                    Calculations are based on the latest admission policies for the <span className="text-[#4A90E2]">2026/27 Intake</span>. Select your target region to see institution-specific formulas.
+                    Calculations are based on the latest admission policies for the <span className="text-[#4A90E2]">2026/27 Intake</span>. Select your target region below to see institution-specific formulas.
                   </p>
                 </div>
               </div>
             </BrutalCard>
           </div>
-          <div className="lg:col-span-4">
-             <Link href="/pakistan/medical/merit-calculator" className="h-full block">
-              <BrutalCard className="h-full bg-[#FF4911] border-4 p-8 flex flex-col justify-between group cursor-pointer text-white">
-                <div>
-                  <p className="font-black text-xs uppercase text-white/50 mb-2 tracking-widest">Specialized</p>
-                  <h3 className="font-black text-3xl uppercase text-white leading-tight mb-4 group-hover:underline">Medical (MDCAT)</h3>
-                  <p className="text-sm text-white font-bold opacity-70">Specific weighted formulas for MBBS/BDS and Healthcare admissions.</p>
-                </div>
-                <div className="mt-8 flex items-center justify-between font-black text-xs uppercase text-white">
-                  Start Calculating <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                </div>
-              </BrutalCard>
-            </Link>
-          </div>
+          {/* Removed hardcoded Pakistan-specific medical card from global index */}
+
         </div>
 
         <h2 className="font-black text-4xl uppercase mb-10 text-black dark:text-white underline decoration-[12px] decoration-[#4A90E2] underline-offset-[12px]">

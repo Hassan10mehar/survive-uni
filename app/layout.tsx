@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   verification: {
-    google: "GOOGLE_VERIFICATION_CODE", // User to replace
+    google: "GLmx-NsD96NjeRKKf_hy4ofdlyVzHgqWfUZeyWjqYYY", 
     yandex: "yandex",
     yahoo: "yahoo",
     other: {
@@ -95,6 +95,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google AdSense - Replace YOUR_CLIENT_ID with your actual publisher ID */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_CLIENT_ID"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className="min-h-full bg-base dark:bg-zinc-950 text-black dark:text-white antialiased transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
