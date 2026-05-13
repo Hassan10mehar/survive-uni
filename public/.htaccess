@@ -1,0 +1,34 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # ── 1. Clean URLs (Remove .html extension) ──
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}\.html -f
+  RewriteRule ^(.*)$ $1.html [NC,L]
+
+  # ── 2. Handle 404 Pages ──
+  ErrorDocument 404 /404.html
+
+  # ── 3. Redirects for Pakistan Universities ──
+  # Slugs: nust,fast,pu,nutech,ned,au-eng,au-noneng,uet-lhr,cui,pieas,giki,bahria,uet-pesh,muet,qau,uaf,bzu,medical,lums-iba
+
+  # Redirect legacy pretty URLs to silo structure
+  RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-(aggregate|merit)-calculator$ /pakistan/$1/merit-calculator [R=301,L]
+  RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-gpa-calculator$ /pakistan/$1/gpa-calculator [R=301,L]
+  RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-cgpa-calculator$ /pakistan/$1/cgpa-calculator [R=301,L]
+
+  # Redirect /pk/ aliases
+  RewriteRule ^pk/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-(aggregate|merit)-calculator$ /pakistan/$1/merit-calculator [R=301,L]
+  RewriteRule ^pk/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-gpa-calculator$ /pakistan/$1/gpa-calculator [R=301,L]
+
+  # Redirect /tools/ internal routes
+  RewriteRule ^tools/aggregate-calculator/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)$ /pakistan/$1/merit-calculator [R=301,L]
+  RewriteRule ^tools/gpa-calculator/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)$ /pakistan/$1/gpa-calculator [R=301,L]
+  RewriteRule ^tools/cgpa-calculator/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)$ /pakistan/$1/cgpa-calculator [R=301,L]
+
+  # ── 4. Global Scale Rewrites ──
+  # us-4-0-gpa-calculator -> /global/gpa-calculator/us-4-0
+  RewriteRule ^(us-4-0|uk-honours|india-10-0|europe-ects|aus-wam|singapore-cap)-gpa-calculator$ /global/gpa-calculator/$1 [NC,L]
+
+</IfModule>

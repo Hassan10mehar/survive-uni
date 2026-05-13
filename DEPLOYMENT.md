@@ -33,19 +33,16 @@ We have set up an automated pipeline. Every time you push to GitHub, the site up
 
 ### Setting up GitHub Secrets
 Go to your GitHub Repo → **Settings > Secrets and variables > Actions** and add:
-- `SSH_HOST`: `82.29.87.65`
-- `SSH_PORT`: `65002`
-- `SSH_USER`: `u961276882`
-- `SSH_PASSWORD`: (Your SSH Password)
+- `FTP_SERVER`: (Your Hostinger FTP hostname, e.g. `ftp.surviveuni.online`)
+- `FTP_USERNAME`: (Your FTP Username)
+- `FTP_PASSWORD`: (Your FTP Password)
 
-### How to Deploy
-Just push your code:
-```powershell
-git add .
-git commit -m "Deploying to production"
-git push origin master
-```
-The GitHub Action will handle the rest!
+### How it works
+1. You push code to GitHub.
+2. GitHub builds your site (takes ~2 minutes).
+3. GitHub uploads the files to Hostinger automatically.
+
+**No more terminal commands needed!**
 
 ## 3. Google Search Console & AdSense
 Before you start ranking, you must verify your site ownership.

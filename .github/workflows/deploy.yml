@@ -1,4 +1,4 @@
-name: Deploy to Hostinger
+name: Deploy Static Site to Hostinger
 
 on:
   push:
@@ -6,33 +6,28 @@ on:
       - master
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            # Navigate to the domain folder (usually domains/surviveuni.online/public_html)
-            # Adjust path if your Hostinger setup is different
-            cd domains/surviveuni.online/public_html || cd public_html
-            
-            # Pull latest changes
-            git pull origin master
-            
-            # Install dependencies
-            npm install
-            
-            # Build the project
-            npm run build
-            
-            # Restart the app
-            # If you use PM2:
-            pm2 restart survive-uni || pm2 start npm --name "survive-uni" -- start || echo "PM2 not found, please restart manually in Hostinger hPanel"
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and Export
+        run: npm run build
+
+      - name: 📂 Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./out/
+          server-dir: /public_html/
