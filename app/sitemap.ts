@@ -5,6 +5,8 @@ import { GLOBAL_SCALES } from '@/lib/globalScales'
 import { UNIS } from '@/lib/unis'
 import { getSortedPostsData } from '@/lib/posts'
 
+export const dynamic = 'force-static'
+
 const BASE = 'https://surviveuni.online'
 const now = new Date()
 

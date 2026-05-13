@@ -37,8 +37,8 @@ export default async function RegionalMeritHub({ params }: { params: Promise<{ c
   // Format all unis for display
   const allUnis = [
     ...globalUnis.map(u => ({ ...u, holistic: !u.hasAdmission })),
-    ...pkUnis
-  ].filter(u => u.hasAdmission || (u as any).formula); // Ensure it has a calculator
+    ...pkUnis.map(u => ({ ...u, hasAdmission: !u.holistic }))
+  ].filter(u => (u as any).hasAdmission || (u as any).formula?.length > 0 || (u as any).fields?.length > 0); 
 
   return (
     <div className="flex-1 pb-20">

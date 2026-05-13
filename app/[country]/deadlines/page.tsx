@@ -33,7 +33,8 @@ export default async function RegionalDeadlinesPage({ params }: { params: Promis
     uni: u.name,
     short: u.id,
     deadline: (u as any).admissionDeadline || "TBA",
-    country: country.name,
+    countryId: countryId,
+    countryName: country.name,
     color: u.color
   }));
 
@@ -41,7 +42,8 @@ export default async function RegionalDeadlinesPage({ params }: { params: Promis
     uni: u.name,
     short: u.id,
     deadline: u.admissionDeadline || "TBA",
-    country: "Pakistan",
+    countryId: "pakistan",
+    countryName: "Pakistan",
     color: u.color
   })) : [];
   

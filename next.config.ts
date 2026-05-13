@@ -5,8 +5,9 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // Static export does not support redirects/rewrites in next.config.ts.
-  // These are now handled in public/.htaccess for Hostinger/Apache.
+  turbopack: {
+    root: 'C:/Users/Dell/Downloads/Pak-edtech-hub/survive-uni',
+  },
 };
 
 export default nextConfig;
