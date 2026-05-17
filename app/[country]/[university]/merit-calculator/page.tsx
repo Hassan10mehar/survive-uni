@@ -4,10 +4,11 @@ import Link from "next/link";
 import { getCountryById } from "@/lib/countries";
 import { getUniById, getAllUniParams } from "@/lib/globalUnis";
 import { UNIS } from "@/lib/unis";
-import SEOSchema from "@/app/components/SEOSchema";
 import { BrutalContainer } from "@/app/components/BrutalUI";
 import UniCalculator from "@/app/components/calculators/AggregateCalculator";
 import GlobalMeritCalc from "./GlobalMeritCalc";
+import UniSEOContent from "@/app/components/UniSEOContent";
+import { getUniMeritMeta } from "@/lib/seo";
 
 // Country-specific admission field configurations
 const COUNTRY_CONFIGS: Record<string, {
@@ -73,17 +74,34 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ country: string; university: string }> }): Promise<Metadata> {
   const { country: countryId, university: uniId } = await params;
+  const uniPK = countryId === "pakistan" ? UNIS.find(u => u.id === uniId) : undefined;
+  const uniGlobal = getUniById(uniId);
+  const uni = uniGlobal || uniPK;
+  if (!uni) return { title: "Not Found" };
+  if (uniPK) return getUniMeritMeta(uniPK, countryId);
+
   const country = getCountryById(countryId);
-  const uni = getUniById(uniId) || (countryId === "pakistan" ? UNIS.find(u => u.id === uniId) : undefined);
-  if (!country || !uni) return { title: "Not Found" };
   const uniName = (uni as any).name;
-  const toolName = country.terms.merit;
+  const toolName = country?.terms.merit || "Merit Calculator";
+
   const title = `${uniName} ${toolName} 2026 | Admission Eligibility`;
   const desc = `Free ${uniName} admission calculator. Check your eligibility, calculate your ${toolName.toLowerCase()} score, and compare against historical cutoffs.`;
+
   return {
-    title, description: desc,
-    keywords: [`${uniName.toLowerCase()} ${toolName.toLowerCase()}`, `${uniId} admission calculator`, `${uniName.toLowerCase()} cutoff 2026`],
+    title,
+    description: desc,
+    keywords: [
+      `${uniName.toLowerCase()} ${toolName.toLowerCase()}`,
+      `${uniId} admission calculator`,
+      `${uniName.toLowerCase()} cutoff 2026`,
+    ],
     alternates: { canonical: `/${countryId}/${uniId}/merit-calculator` },
+    openGraph: {
+      title,
+      description: desc,
+      url: `https://surviveuni.online/${countryId}/${uniId}/merit-calculator`,
+      type: 'website',
+    },
   };
 }
 
@@ -97,18 +115,10 @@ export default async function UniMeritPage({ params }: { params: Promise<{ count
 
   const uniName = (uni as any).name;
   const uniColor = (uniGlobal?.color) || (uniPK as any)?.color || country.color;
+  const isPK = countryId === "pakistan";
 
   return (
     <>
-      <SEOSchema type="SoftwareApplication" data={{ name: `${uniName} ${country.terms.merit}`, description: `Free admission calculator for ${uniName}.` }} />
-      <SEOSchema type="BreadcrumbList" data={{ items: [
-        { position: 1, name: "Home", item: "https://surviveuni.online" },
-        { position: 2, name: country.name, item: `https://surviveuni.online/${countryId}` },
-        { position: 3, name: uniName, item: `https://surviveuni.online/${countryId}/${uniId}` },
-        { position: 4, name: country.terms.merit, item: `https://surviveuni.online/${countryId}/${uniId}/merit-calculator` },
-      ]}} />
-
-      {/* Breadcrumb */}
       <div className="bg-black border-b-4 border-black px-4 py-2">
         <nav className="max-w-4xl mx-auto flex items-center gap-2 text-[10px] font-black uppercase text-[#FFDF00]/60">
           <Link href="/" className="hover:text-[#FFDF00]">Home</Link><span>/</span>
@@ -148,24 +158,23 @@ export default async function UniMeritPage({ params }: { params: Promise<{ count
         })()
       )}
 
-      {/* SEO Content */}
-      <BrutalContainer maxWidth="max-w-3xl" className="mt-8 mb-24 space-y-8">
-        <section>
-          <h2 className="text-2xl font-black uppercase mb-4 underline decoration-4 decoration-[#FFDF00] underline-offset-8">
-            {country.terms.merit} — How It Works
-          </h2>
-          <div className="border-4 border-black p-6 bg-white dark:bg-zinc-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-            <p className="font-bold text-sm leading-relaxed">
-              {countryId === "pakistan"
-                ? `${uniName} calculates admission merit using a weighted formula combining your entry test score, FSc/A-Level marks, and matric percentage. Our calculator uses the official 2026 weightages.`
-                : `${uniName} uses ${COUNTRY_CONFIGS[countryId]?.scaleLabel || "standardized test scores"} as the primary admission criteria. ${COUNTRY_CONFIGS[countryId]?.note || ""}`}
-            </p>
-          </div>
-        </section>
-        <Link href={`/${countryId}/${uniId}`} className="inline-flex items-center gap-2 border-4 border-black px-5 py-2 font-black text-xs uppercase bg-white dark:bg-zinc-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all">
-          ← All {uniName} Tools
-        </Link>
-      </BrutalContainer>
+      {/* ── SEO Content Section ── */}
+      {isPK && uniPK ? (
+        <UniSEOContent
+          uni={uniPK}
+          countryId={countryId}
+          countryName={country.name}
+          toolType="merit"
+        />
+      ) : (
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 mt-10 mb-16">
+          <Link href={`/${countryId}/${uniId}`}
+            className="inline-flex items-center gap-2 border-4 border-black px-5 py-2 font-black text-xs uppercase bg-white dark:bg-zinc-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all"
+          >
+            ← All {uniName} Tools
+          </Link>
+        </div>
+      )}
     </>
   );
 }

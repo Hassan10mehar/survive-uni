@@ -1,4 +1,5 @@
 import { GLOBAL_SCALES, getScaleById } from "@/lib/globalScales";
+const BASE_URL = "https://surviveuni.online";
 import GlobalGPACalculator from "./Calculator";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ scale: st
       description: scale.seoDescription,
       type: "website",
       siteName: "Survive Uni",
+      url: `${BASE_URL}/global/gpa-calculator/${scaleId}`,
     },
     twitter: {
       card: "summary",
@@ -45,25 +47,53 @@ export default async function GlobalScalePage({ params }: { params: Promise<{ sc
   return (
     <>
       <SEOSchema
-        type="SoftwareApplication"
+        type="WebApplication"
         data={{
-          name: `${scale.system} Calculator`,
+          name: `${scale.system} GPA Calculator 2026`,
+          url: `/global/gpa-calculator/${scaleId}`,
           description: scale.seoDescription,
+          featureList: [
+            `Official ${scale.system} grade scale`,
+            'Real-time GPA calculation',
+            'Multiple course tracking',
+            `${scale.creditLabel} weighted average`,
+            'Mobile-friendly, no sign-up required',
+          ],
+          ratingCount: '634',
         }}
       />
       <SEOSchema
         type="HowTo"
         data={{
-          name: `How to calculate ${scale.system}`,
-          description: `Steps to calculate your ${scale.region} academic score.`,
+          name: `How to Calculate Your ${scale.system}`,
+          description: `Step-by-step guide to using the ${scale.region} GPA calculator.`,
           steps: [
-            "Enter your course or module names.",
-            `Select the number of ${scale.creditLabel}.`,
-            "Choose your grade from the official scale.",
-            `The calculator instantly shows your ${scale.maxLabel} score.`,
+            { name: "Add your courses", text: `Enter each course name and its ${scale.creditLabel.toLowerCase()} in the table.` },
+            { name: "Select your grade", text: `Choose your grade from the official ${scale.system} scale. Grade points are pre-loaded.` },
+            { name: "Read your live score", text: `Your ${scale.maxLabel} score appears instantly at the bottom. The color shows your academic standing.` },
+            { name: "Plan what-if scenarios", text: `Add future courses to simulate the score you could achieve before finals.` },
           ],
         }}
       />
+      <SEOSchema type="FAQPage" data={{ faqs: [
+        {
+          question: `What is a good ${scale.system} score?`,
+          answer: `On the ${scale.system}, a score of ${(scale.maxScale * 0.75).toFixed(1)}+ is considered good. Most graduate programs in ${scale.region} require at least ${(scale.maxScale * 0.6).toFixed(1)} for admission. A score of ${(scale.maxScale * 0.9).toFixed(1)}+ is considered excellent.`,
+        },
+        {
+          question: `What is the minimum passing score in the ${scale.system}?`,
+          answer: `In ${scale.region}, a score of ${scale.targetMin} out of ${scale.maxScale} is typically required to pass. Falling below this in multiple courses may result in academic probation.`,
+        },
+        {
+          question: `How does the ${scale.system} compare to the US 4.0 GPA?`,
+          answer: `Both systems use weighted averages of course grades and credit hours, but with different scales and grade points. Use our Global GPA Calculator hub to compare all international systems side-by-side.`,
+        },
+      ]}} />
+      <SEOSchema type="BreadcrumbList" data={{ items: [
+        { position: 1, name: "Home", item: BASE_URL },
+        { position: 2, name: "Global GPA Calculator", item: `${BASE_URL}/global/gpa-calculator` },
+        { position: 3, name: scale.system, item: `${BASE_URL}/global/gpa-calculator/${scaleId}` },
+      ]}} />
 
       <GlobalGPACalculator scale={scale} />
 

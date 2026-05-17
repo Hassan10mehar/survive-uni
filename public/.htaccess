@@ -2,12 +2,29 @@
   RewriteEngine On
   RewriteBase /
 
-  # ── 1. Clean URLs (Remove .html extension) ──
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME}\.html -f
-  RewriteRule ^(.*)$ $1.html [NC,L]
+  # ── 0. Strip trailing slash → 301 (must be FIRST, before all other rules) ──
+  # If the request has a trailing slash AND is NOT the root (/), redirect to
+  # the same path without the trailing slash.  This prevents Hostinger from
+  # serving a bare directory listing (403) for the static-export sub-folders.
+  RewriteCond %{REQUEST_URI} ^(.+)/$
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  # ── 2. Handle 404 Pages ──
+  # ── 1. Clean URLs – serve the pre-rendered .html file ──
+  # Case A: there is no matching real file but foo.html exists → serve it.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [NC,L]
+
+  # Case B: the path is a real directory that contains index.html (static-export
+  # layout). Trailing slash was already removed in rule 0, so by the time we
+  # reach here the URI has no slash. Serve the directory's index.html directly.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*)$ $1/index.html [NC,L]
+
+  # ── 2. Custom 404 handler ──
   ErrorDocument 404 /404.html
 
   # ── 3. Redirects for Pakistan Universities ──
@@ -29,6 +46,6 @@
 
   # ── 4. Global Scale Rewrites ──
   # us-4-0-gpa-calculator -> /global/gpa-calculator/us-4-0
-  RewriteRule ^(us-4-0|uk-honours|india-10-0|europe-ects|aus-wam|singapore-cap)-gpa-calculator$ /global/gpa-calculator/$1 [NC,L]
+  RewriteRule ^(us-4-0|uk-honours|india-10-0|europe-ects|aus-wam|singapore-cap)-gpa-calculator$ /global/gpa-calculator/$1 [NC,R=301,L]
 
 </IfModule>
