@@ -2,6 +2,10 @@
   RewriteEngine On
   RewriteBase /
 
+  # Disable automatic directory trailing slashes and listing
+  DirectorySlash Off
+  Options -Indexes
+
   # 1. Remove trailing slashes globally for incoming requests
   RewriteCond %{THE_REQUEST} \s[^?]*\/+[?\s]
   RewriteCond %{REQUEST_URI} !^/$
@@ -9,7 +13,6 @@
 
   # 2. Clean URLs: Map /gpa-calculator directly to gpa-calculator.html
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME}\.html -f
   RewriteRule ^(.*)$ $1.html [NC,L]
 
