@@ -2,35 +2,21 @@
   RewriteEngine On
   RewriteBase /
 
-  # ── 0. Strip trailing slash → 301 (must be FIRST, before all other rules) ──
-  # If the request has a trailing slash AND is NOT the root (/), redirect to
-  # the same path without the trailing slash.  This prevents Hostinger from
-  # serving a bare directory listing (403) for the static-export sub-folders.
-  RewriteCond %{REQUEST_URI} ^(.+)/$
+  # 1. Remove trailing slashes globally for incoming requests
+  RewriteCond %{THE_REQUEST} \s[^?]*\/+[?\s]
   RewriteCond %{REQUEST_URI} !^/$
-  RewriteRule ^(.+)/$ /$1 [R=301,L]
+  RewriteRule ^(.*)/$ /$1 [R=301,L]
 
-  # ── 1. Clean URLs – serve the pre-rendered .html file ──
-  # Case A: there is no matching real file but foo.html exists → serve it.
+  # 2. Clean URLs: Map /gpa-calculator directly to gpa-calculator.html
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME}.html -f
-  RewriteRule ^(.+)$ $1.html [NC,L]
+  RewriteCond %{REQUEST_FILENAME}\.html -f
+  RewriteRule ^(.*)$ $1.html [NC,L]
 
-  # Case B: the path is a real directory that contains index.html (static-export
-  # layout). Trailing slash was already removed in rule 0, so by the time we
-  # reach here the URI has no slash. Serve the directory's index.html directly.
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteCond %{REQUEST_FILENAME}/index.html -f
-  RewriteRule ^(.*)$ $1/index.html [NC,L]
-
-  # ── 2. Custom 404 handler ──
+  # 3. Custom 404 Handler
   ErrorDocument 404 /404.html
 
-  # ── 3. Redirects for Pakistan Universities ──
-  # Slugs: nust,fast,pu,nutech,ned,au-eng,au-noneng,uet-lhr,cui,pieas,giki,bahria,uet-pesh,muet,qau,uaf,bzu,medical,lums-iba
-
-  # Redirect legacy pretty URLs to silo structure
+  # ── 4. REDIRECTS FOR PAKISTAN UNIVERSITIES ──
   RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-(aggregate|merit)-calculator$ /pakistan/$1/merit-calculator [R=301,L]
   RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-gpa-calculator$ /pakistan/$1/gpa-calculator [R=301,L]
   RewriteRule ^(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)-cgpa-calculator$ /pakistan/$1/cgpa-calculator [R=301,L]
@@ -44,8 +30,7 @@
   RewriteRule ^tools/gpa-calculator/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)$ /pakistan/$1/gpa-calculator [R=301,L]
   RewriteRule ^tools/cgpa-calculator/(nust|fast|pu|nutech|ned|au-eng|au-noneng|uet-lhr|cui|pieas|giki|bahria|uet-pesh|muet|qau|uaf|bzu|medical|lums-iba)$ /pakistan/$1/cgpa-calculator [R=301,L]
 
-  # ── 4. Global Scale Rewrites ──
-  # us-4-0-gpa-calculator -> /global/gpa-calculator/us-4-0
+  # ── 5. GLOBAL SCALE REWRITES ──
   RewriteRule ^(us-4-0|uk-honours|india-10-0|europe-ects|aus-wam|singapore-cap)-gpa-calculator$ /global/gpa-calculator/$1 [NC,R=301,L]
 
 </IfModule>
