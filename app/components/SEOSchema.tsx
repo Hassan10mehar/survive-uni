@@ -121,9 +121,9 @@ export default function SEOSchema({ type, data }: SEOSchemaProps) {
       ...base,
       '@type': 'BreadcrumbList',
       itemListElement: data.items.map(
-        (item: { position: number; name: string; item: string }) => ({
+        (item: { position?: number; name: string; item: string }, index: number) => ({
           '@type': 'ListItem',
-          position: item.position,
+          position: index + 1,
           name: item.name,
           item: item.item,
         })
